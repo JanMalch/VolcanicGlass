@@ -1,7 +1,6 @@
 package io.github.janmalch.volcanicglass
 
 import android.app.Application
-import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
 import io.github.janmalch.volcanicglass.core.ApplicationScope
 import io.github.janmalch.volcanicglass.core.content.ContentRepository
@@ -17,6 +16,7 @@ import kotlin.time.measureTime
 class VolcanicGlassApplication : Application() {
     @Inject
     lateinit var contentRepository: ContentRepository
+
     @ApplicationScope
     @Inject
     lateinit var scope: CoroutineScope

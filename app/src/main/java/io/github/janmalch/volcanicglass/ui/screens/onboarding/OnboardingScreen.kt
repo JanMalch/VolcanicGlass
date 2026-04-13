@@ -26,7 +26,11 @@ fun OnboardingScreen(
         ) {
             val pickDirectoryLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.OpenDocumentTree(),
-                onResult = { viewModel.setDirectory(it ?: return@rememberLauncherForActivityResult) }
+                onResult = {
+                    viewModel.setDirectory(
+                        it ?: return@rememberLauncherForActivityResult
+                    )
+                }
             )
 
             Text("Pick your vault directory.")

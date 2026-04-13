@@ -27,7 +27,7 @@ fun FileTree(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        FileTreeNode(tree.root, onFileClick,0.dp)
+        FileTreeNode(tree.root, onFileClick, 0.dp)
     }
 }
 

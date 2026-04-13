@@ -43,8 +43,8 @@ object CoroutinesModule {
     fun providesApplicationScope(@DefaultDispatcher dispatcher: CoroutineContext): CoroutineScope =
         CoroutineScope(
             SupervisorJob()
-             + dispatcher
-            + CoroutineName("ApplicationScope")
+                    + dispatcher
+                    + CoroutineName("ApplicationScope")
         )
 
 }

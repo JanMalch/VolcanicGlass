@@ -1,10 +1,7 @@
 package io.github.janmalch.volcanicglass.core.content
 
-import android.net.Uri
 import androidx.core.net.toUri
 import androidx.datastore.core.Serializer
-import io.github.janmalch.volcanicglass.core.AppJson
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
