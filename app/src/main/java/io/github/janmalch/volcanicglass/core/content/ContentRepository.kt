@@ -3,8 +3,8 @@ package io.github.janmalch.volcanicglass.core.content
 import android.app.Application
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStore
 import androidx.documentfile.provider.DocumentFile
@@ -160,6 +160,10 @@ class ContentRepository @Inject constructor(
     }
 
     suspend fun setVaultUri(directory: Uri) {
+        contentResolver.takePersistableUriPermission(
+            directory,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION
+        )
         context.vaultStore.updateData { VaultData(directory) }
     }
 }
