@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
@@ -55,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.mikepenz.markdown.m3.Markdown
 import com.mikepenz.markdown.model.State
+import io.github.janmalch.shed.Shed
 import io.github.janmalch.volcanicglass.R
 import io.github.janmalch.volcanicglass.core.UriKSerializer
 import io.github.janmalch.volcanicglass.core.content.ContentFile
@@ -132,6 +134,13 @@ fun FileScreen(
                         Icon(
                             Icons.Default.Create,
                             contentDescription = stringResource(R.string.open_in_obsidian)
+                        )
+                    }
+                    // FIXME: proper menu
+                    IconButton(onClick = { Shed.startActivity(context) }) {
+                        Icon(
+                            Icons.Default.MoreVert,
+                            contentDescription = null,
                         )
                     }
                 }

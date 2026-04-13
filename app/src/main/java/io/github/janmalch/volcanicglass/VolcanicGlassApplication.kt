@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.time.measureTime
 
@@ -22,12 +23,14 @@ class VolcanicGlassApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Timber.plant(Timber.DebugTree())
         scope.launch(CoroutineExceptionHandler { _, throwable ->
-            Log.e("VolcanicGlassApplication", "Failed to prefetch recent files.")
+            Timber.e(throwable, "Failed to prefetch recent files.")
         }) {
             measureTime {
                 contentRepository.storedRecentFiles.first()
-            }.also { Log.d("VolcanicGlassApplication", "Recent files prefetched within $it.") }
+            }.also { Timber.d("Recent files prefetched within %s.", it) }
         }
     }
 }

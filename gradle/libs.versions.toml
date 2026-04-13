@@ -22,6 +22,8 @@ ksp = "2.3.6"
 markdown-renderer = "0.39.2"
 serialization = "1.10.0"
 androidxCoreSplashscreen = "1.2.0"
+shed = "0.4.1"
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +59,9 @@ markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer", v
 markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "markdown-renderer"}
 markdown-renderer-android = { module = "com.mikepenz:multiplatform-markdown-renderer-android", version.ref = "markdown-renderer"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+shed-autoload = { module = "io.github.janmalch:shed-autoload", version.ref = "shed" }
+shed = { module = "io.github.janmalch:shed", version.ref = "shed" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

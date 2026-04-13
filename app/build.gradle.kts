@@ -69,6 +69,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.timber)
+    implementation(libs.shed)
+    implementation(libs.shed.autoload)
+
     implementation(libs.markdown.renderer)
     implementation(libs.markdown.renderer.m3)
     implementation(libs.markdown.renderer.android)

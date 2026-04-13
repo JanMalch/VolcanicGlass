@@ -12,10 +12,12 @@ import io.github.janmalch.volcanicglass.core.content.ContentRepository
 import io.github.janmalch.volcanicglass.core.content.TreeState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -25,6 +27,10 @@ class FileViewModel @AssistedInject constructor(
     private val contentRepository: ContentRepository,
 ) : ViewModel() {
     val file = (navArgs.file?.let { contentRepository.watchFile(it) } ?: flowOf(null))
+        .catch {
+            Timber.e(it, "Failed to determine file from navigation arguments.")
+            emit(null)
+        }
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val markdownFlow = file
@@ -33,6 +39,7 @@ class FileViewModel @AssistedInject constructor(
 
     val recentFiles = contentRepository.recentFiles
         .map { it.drop(1) }
+        .catch { Timber.e(it, "Failed to determine recent files."); emit(emptyList()) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     val tree = contentRepository.tree

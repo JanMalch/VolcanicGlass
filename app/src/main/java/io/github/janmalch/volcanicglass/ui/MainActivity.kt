@@ -9,11 +9,22 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
@@ -21,6 +32,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.janmalch.shed.Shed
 import io.github.janmalch.volcanicglass.ui.screens.file.FileScreen
 import io.github.janmalch.volcanicglass.ui.screens.onboarding.OnboardingScreen
 import io.github.janmalch.volcanicglass.ui.theme.VolcanicGlassTheme
@@ -40,6 +52,24 @@ class MainActivity : ComponentActivity() {
             // This also causes the stack to reset when vault is set up
             when (val s = state) {
                 MainActivityViewState.Loading -> {}
+                MainActivityViewState.Failure -> VolcanicGlassTheme {
+                    Scaffold { paddingValues ->
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(paddingValues),
+                        ) {
+                            Text("Fatal error during app start.")
+                            Spacer(Modifier.height(16.dp))
+                            Button(onClick = {
+                                Shed.startActivity(this@MainActivity)
+                            }) {
+                                Text("Check logs")
+                            }
+                        }
+                    }
+                }
+
                 is MainActivityViewState.Ready ->
                     if (s.hasVault) VolcanicGlassApp(initialScreen = FileScreen(s.mostRecent))
                     else VolcanicGlassApp(initialScreen = OnboardingScreen)

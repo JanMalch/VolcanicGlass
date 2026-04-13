@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -105,13 +106,13 @@ class ContentRepository @Inject constructor(
             vaultUri ?: return@map TreeState.NoVault
             val vaultDocument = DocumentFile.fromTreeUri(context as Application, vaultUri)
             if (vaultDocument == null) {
-                Log.e("ContentRepository", "Failed to get document file for vault.")
+                Timber.e("Failed to get document file for vault.")
                 return@map TreeState.Failure
             }
             TreeState.Success.valueOf(vaultDocument)
         }
         .catch {
-            Log.e("ContentRepository", "Failed to create document tree.", it)
+            Timber.e(it, "Failed to create document tree.")
             emit(TreeState.Failure)
         }
         .flowOn(ioDispatcher)
@@ -145,7 +146,7 @@ class ContentRepository @Inject constructor(
 
     private fun updateHistory(file: Uri) {
         scope.launch(CoroutineExceptionHandler { _, throwable ->
-            Log.e("ContentRepository", "Failed to update history of recent files.", throwable)
+            Timber.e(throwable, "Failed to update history of recent files.")
         }) {
             val fileStr = file.toString()
             val updated = context.historyStore.data.first()
@@ -154,7 +155,7 @@ class ContentRepository @Inject constructor(
                 .apply { remove(fileStr); add(0, fileStr) }
                 .take(5)
             context.historyStore.updateData { HistoryData(updated) }
-            Log.d("ContentRepository", "Updated history: $updated.")
+            Timber.d("Updated history: %s", updated)
         }
     }
 
@@ -167,7 +168,7 @@ private val Context.vaultStore by dataStore(
     fileName = "vault.json",
     serializer = VaultDataStoreSerializer,
     corruptionHandler = ReplaceFileCorruptionHandler {
-        Log.e("VaultStore", "Replacing corrupted file store.", it)
+        Timber.e(it, "Replacing corrupted file of vault store.")
         VaultDataStoreSerializer.defaultValue
     }
 )
@@ -177,7 +178,7 @@ private val Context.historyStore by dataStore(
     fileName = "history.json",
     serializer = HistoryDataStoreSerializer,
     corruptionHandler = ReplaceFileCorruptionHandler {
-        Log.e("HistoryStore", "Replacing corrupted file store.", it)
+        Timber.e(it, "Replacing corrupted file of history store.")
         HistoryDataStoreSerializer.defaultValue
     }
 )
