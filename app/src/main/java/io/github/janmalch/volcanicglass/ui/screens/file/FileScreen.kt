@@ -195,7 +195,10 @@ fun FileScreen(
                     when (tree) {
                         is TreeState.Success -> FileTree(
                             tree = tree,
-                            onFileClick = onFileClick,
+                            onFileClick = {
+                                isTreeVisible = false
+                                onFileClick(it)
+                            },
                             modifier = Modifier
                                 .verticalScroll(rememberScrollState())
                                 .padding(16.dp)
