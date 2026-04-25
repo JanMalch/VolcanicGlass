@@ -40,7 +40,7 @@ class FileViewModel @AssistedInject constructor(
         }
         .flatMapLatest { contentFile ->
             if (contentFile != null) {
-                Timber.d("Parsing file content of %s.", contentFile.name)
+                Timber.d("Parsing file content of '%s'.", contentFile.name)
             }
             parseMarkdownFlow(contentFile?.content.orEmpty()).map { markdown ->
                 MarkdownFile(contentFile, markdown)
