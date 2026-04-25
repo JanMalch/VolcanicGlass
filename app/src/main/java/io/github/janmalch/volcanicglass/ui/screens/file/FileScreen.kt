@@ -178,7 +178,10 @@ fun FileScreen(
                 .padding(paddingValues)
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            Markdown(state)
+            Markdown(
+                state = state,
+                imageTransformer = Coil3ImageTransformer
+            )
         }
 
         if (isTreeVisible) {
