@@ -98,7 +98,7 @@ fun FileScreen(
                 title = {
                     file?.also {
                         Text(
-                            text = it.name.removeSuffix(".md"),
+                            text = it.name,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -115,7 +115,7 @@ fun FileScreen(
                                     .scheme("obsidian")
                                     .path("open")
                                     .appendQueryParameter("vault", success.root.name)
-                                    .appendQueryParameter("file", file.name.removeSuffix(".md"))
+                                    .appendQueryParameter("file", file.name)
                                     .build()
                                     .toString()
                                     .replace(":/", "://")
@@ -154,7 +154,7 @@ fun FileScreen(
                         )
                         for (node in recentFiles) {
                             SuggestionChip(
-                                label = { Text(node.name.removeSuffix(".md")) },
+                                label = { Text(node.name) },
                                 onClick = { onFileClick(node) },
                                 colors = colors
                             )

@@ -45,10 +45,17 @@ sealed interface TreeState {
         private val lut: Map<Uri, Node> = emptyMap()
     ) : TreeState {
 
+        private val nodeByFileName = lut.values.associateBy { it.name }
         operator fun get(uri: Uri): Node? = lut[uri]
+        operator fun get(fileName: String): Node? = nodeByFileName[fileName]
 
         data class Node(
             val uri: Uri,
+            /**
+             * Name of the node.
+             *
+             * If this node is a file, the name will _not_ contain the file extension.
+             */
             val name: String,
             val isDirectory: Boolean,
             val children: List<Node>,
@@ -56,7 +63,7 @@ sealed interface TreeState {
             constructor(
                 file: DocumentFile,
                 children: List<Node>
-            ) : this(file.uri, file.name ?: "?", file.isDirectory, children)
+            ) : this(file.uri, file.name?.removeSuffix(".md") ?: "?", file.isDirectory, children)
         }
 
         companion object {
@@ -78,10 +85,18 @@ sealed interface TreeState {
     }
 }
 
-data class ContentFile(
+@ConsistentCopyVisibility
+data class ContentFile private constructor(
     val name: String,
     val content: String
-)
+) {
+    companion object {
+        fun valueOf(name: String, content: String) = ContentFile(
+            name = name.removeSuffix(".md"),
+            content = content,
+        )
+    }
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
@@ -147,7 +162,7 @@ class ContentRepository @Inject constructor(
         val content = checkNotNull(contentResolver.openInputStream(file)) {
             "No file found for $file."
         }.bufferedReader().readText()
-        return ContentFile(name = doc.name ?: "?", content = content)
+        return ContentFile.valueOf(name = doc.name ?: "?", content = content)
     }
 
 
