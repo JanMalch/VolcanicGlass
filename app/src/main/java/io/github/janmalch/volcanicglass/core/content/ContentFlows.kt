@@ -31,13 +31,11 @@ internal fun ContentResolver.watchChanges(
         }
         val observer = object : ContentObserver(handler) {
             override fun onChange(selfChange: Boolean) {
-                println("Change for $uri on " + Thread.currentThread())
                 trySendBlocking(uri)
             }
         }
         registerContentObserver(uri, notifyForDescendants, observer)
         awaitClose {
-            println("Stop watching $uri")
             unregisterContentObserver(observer)
         }
     }
