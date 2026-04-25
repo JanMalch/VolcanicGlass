@@ -1,6 +1,18 @@
 <!-- ROAR:UPCOMING:START -->
-[Upcoming Changes …](https://github.com/JanMalch/VolcanicGlass/compare/v0.2.0...main)
+[Upcoming Changes …](https://github.com/JanMalch/VolcanicGlass/compare/v0.3.0...main)
 <!-- ROAR:UPCOMING:END -->
+
+## [0.3.0](https://github.com/JanMalch/VolcanicGlass/tree/v0.3.0) - April 25, 2026
+
+**Full Changelog:** [`v0.2.0...v0.3.0`](https://github.com/JanMalch/VolcanicGlass/compare/v0.2.0...v0.3.0)
+
+| type | description | commit |
+|---|---|---|
+| feat | add experimental local image support | [`0ab92ebb`](https://github.com/JanMalch/VolcanicGlass/commit/0ab92ebb057676671135b6b874c63f41c31ce510) |
+| feat | hide root in tree | [`d2ee07c1`](https://github.com/JanMalch/VolcanicGlass/commit/d2ee07c13fcbf68dfa2b30ea831c46579a2c5220) |
+
+
+
 
 ## [0.2.0](https://github.com/JanMalch/VolcanicGlass/tree/v0.2.0) - April 25, 2026
 

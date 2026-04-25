@@ -9,7 +9,7 @@ plugins {
 
 
 // Updated by roar
-val vName = "0.2.0"
+val vName = "0.3.0"
 
 // Compute versionCode based on versionName, by padding the segments in thousands groups,
 // allowing for up to 1000 patch versions per major/minor.
