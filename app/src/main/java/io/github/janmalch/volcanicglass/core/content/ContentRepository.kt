@@ -66,7 +66,7 @@ sealed interface TreeState {
                 }
                 return Node(
                     this,
-                    listFiles().filter { (it.isDirectory && it.name != ".obsidian") || it.type == "text/markdown" }
+                    listFiles().filter { (it.isDirectory && it.name != ".obsidian" && it.name != ".trash") || it.type == "text/markdown" }
                         .map { it.toNode(lut) }).also { lut[uri] = it }
             }
 
