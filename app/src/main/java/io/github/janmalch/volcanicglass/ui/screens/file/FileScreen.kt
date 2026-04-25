@@ -31,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,8 +56,10 @@ import io.github.janmalch.volcanicglass.core.UriKSerializer
 import io.github.janmalch.volcanicglass.core.content.ContentFile
 import io.github.janmalch.volcanicglass.core.content.TreeState
 import io.github.janmalch.volcanicglass.ui.components.FileTree
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.serialization.Serializable
 
+@Immutable
 @Serializable
 data class FileScreen(
     @Serializable(with = UriKSerializer::class)
@@ -84,7 +87,7 @@ fun FileScreen(
     file: ContentFile?,
     state: State,
     tree: TreeState,
-    recentFiles: List<TreeState.Success.Node>,
+    recentFiles: ImmutableList<TreeState.Success.Node>,
     onFileClick: (TreeState.Success.Node) -> Unit,
 ) {
     var isTreeVisible by remember { mutableStateOf(false) }

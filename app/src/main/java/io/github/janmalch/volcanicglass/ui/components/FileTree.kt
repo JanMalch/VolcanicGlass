@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.janmalch.volcanicglass.core.content.TreeState
 import io.github.janmalch.volcanicglass.ui.theme.VolcanicGlassTheme
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun FileTree(
@@ -68,23 +69,23 @@ private fun FileTreePreview() {
                     uri = Uri.EMPTY,
                     isDirectory = true,
                     name = "Root",
-                    children = listOf(
+                    children = persistentListOf(
                         TreeState.Success.Node(
                             uri = Uri.EMPTY,
                             isDirectory = true,
                             name = "Folder A",
-                            children = listOf(
+                            children = persistentListOf(
                                 TreeState.Success.Node(
                                     uri = Uri.EMPTY,
                                     isDirectory = false,
                                     name = "File A-A",
-                                    children = emptyList()
+                                    children = persistentListOf()
                                 ),
                                 TreeState.Success.Node(
                                     uri = Uri.EMPTY,
                                     isDirectory = false,
                                     name = "File A-B",
-                                    children = emptyList()
+                                    children = persistentListOf()
                                 ),
                             )
                         ),
@@ -92,7 +93,7 @@ private fun FileTreePreview() {
                             uri = Uri.EMPTY,
                             isDirectory = false,
                             name = "File B",
-                            children = emptyList()
+                            children = persistentListOf()
                         )
                     )
                 )

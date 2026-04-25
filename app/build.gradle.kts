@@ -75,6 +75,8 @@ dependencies {
 
     implementation(libs.bundles.coil)
 
+    implementation(libs.collections.immutable)
+
     implementation(libs.markdown.renderer)
     implementation(libs.markdown.renderer.m3)
     implementation(libs.markdown.renderer.android)

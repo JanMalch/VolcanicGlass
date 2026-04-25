@@ -5,12 +5,15 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.runtime.Immutable
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStore
 import androidx.documentfile.provider.DocumentFile
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.janmalch.volcanicglass.core.ApplicationScope
 import io.github.janmalch.volcanicglass.core.IoDispatcher
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,6 +37,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.measureTimedValue
 
 
+@Immutable
 sealed interface TreeState {
     data object Loading : TreeState
     data object Failure : TreeState
@@ -49,6 +53,7 @@ sealed interface TreeState {
         operator fun get(uri: Uri): Node? = lut[uri]
         operator fun get(fileName: String): Node? = nodeByFileName[fileName]
 
+        @Immutable
         data class Node(
             val uri: Uri,
             /**
@@ -58,12 +63,17 @@ sealed interface TreeState {
              */
             val name: String,
             val isDirectory: Boolean,
-            val children: List<Node>,
+            val children: ImmutableList<Node>,
         ) {
             constructor(
                 file: DocumentFile,
                 children: List<Node>
-            ) : this(file.uri, file.name?.removeSuffix(".md") ?: "?", file.isDirectory, children)
+            ) : this(
+                file.uri,
+                file.name?.removeSuffix(".md") ?: "?",
+                file.isDirectory,
+                children.toImmutableList()
+            )
         }
 
         companion object {

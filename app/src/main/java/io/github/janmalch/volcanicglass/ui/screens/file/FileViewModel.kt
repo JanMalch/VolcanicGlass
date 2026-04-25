@@ -10,6 +10,8 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.janmalch.volcanicglass.core.content.ContentRepository
 import io.github.janmalch.volcanicglass.core.content.TreeState
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -37,9 +39,9 @@ class FileViewModel @AssistedInject constructor(
         .stateIn(viewModelScope, SharingStarted.Eagerly, State.Loading())
 
     val recentFiles = contentRepository.recentFiles
-        .map { it.drop(1) }
-        .catch { Timber.e(it, "Failed to determine recent files."); emit(emptyList()) }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .map { it.drop(1).toImmutableList() }
+        .catch { Timber.e(it, "Failed to determine recent files."); emit(persistentListOf()) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, persistentListOf())
 
     val tree = contentRepository.tree
         .stateIn(viewModelScope, SharingStarted.Eagerly, TreeState.Loading)
