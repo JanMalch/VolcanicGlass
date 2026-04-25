@@ -26,6 +26,7 @@ shed = "0.4.1"
 timber = "5.0.1"
 coil = "3.4.0"
 collections-immutable = "0.4.0"
+stability-analyzer = "0.7.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +78,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+stability-analyzer = { id = "com.github.skydoves.compose.stability.analyzer", version.ref = "stability-analyzer" }
 
 [bundles]
 coil = ["coil-compose", "coil-network-okhttp", "coil-network-cache-control", "coil-gif", "coil-svg"]

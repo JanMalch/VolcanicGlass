@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.com.google.dagger.hilt.android)
     alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.stability.analyzer)
 }
 
 
