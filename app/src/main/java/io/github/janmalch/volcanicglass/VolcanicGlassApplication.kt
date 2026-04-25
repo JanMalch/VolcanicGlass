@@ -1,8 +1,10 @@
 package io.github.janmalch.volcanicglass
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
+import android.util.Log
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.annotation.ExperimentalCoilApi
@@ -11,6 +13,9 @@ import coil3.gif.GifDecoder
 import coil3.network.cachecontrol.CacheControlCacheStrategy
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.svg.SvgDecoder
+import com.skydoves.compose.stability.runtime.ComposeStabilityAnalyzer
+import com.skydoves.compose.stability.runtime.RecompositionEvent
+import com.skydoves.compose.stability.runtime.RecompositionLogger
 import dagger.hilt.android.HiltAndroidApp
 import io.github.janmalch.volcanicglass.core.ApplicationScope
 import io.github.janmalch.volcanicglass.core.content.ContentRepository
@@ -34,6 +39,38 @@ class VolcanicGlassApplication : Application(), SingletonImageLoader.Factory {
 
     override fun onCreate() {
         super.onCreate()
+        ComposeStabilityAnalyzer.setEnabled(BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
+            ComposeStabilityAnalyzer.setLogger(object : RecompositionLogger {
+                @SuppressLint("LogNotTimber") // doesn't belong in shed
+                override fun log(event: RecompositionEvent) {
+                    val message = buildString {
+                        append("🔄 Recomposition #${event.recompositionCount}")
+                        append(" - ${event.composableName}")
+                        if (event.tag.isNotEmpty()) {
+                            append(" [${event.tag}]")
+                        }
+                        appendLine()
+
+                        event.parameterChanges.forEach { change ->
+                            append("   • ${change.name}: ${change.type}")
+                            when {
+                                change.changed -> append(" ➡️ CHANGED")
+                                change.stable -> append(" ✅ STABLE")
+                                else -> append(" ⚠️ UNSTABLE")
+                            }
+                            appendLine()
+                        }
+
+                        if (event.unstableParameters.isNotEmpty()) {
+                            append("   ⚠️ Unstable: ${event.unstableParameters.joinToString()}")
+                        }
+                    }
+
+                    Log.v("AppRecomposition", message)
+                }
+            })
+        }
 
         Timber.plant(Timber.DebugTree())
         scope.launch(CoroutineExceptionHandler { _, throwable ->

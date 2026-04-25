@@ -8,6 +8,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.janmalch.volcanicglass.core.content.ContentFile
 import io.github.janmalch.volcanicglass.core.content.ContentRepository
 import io.github.janmalch.volcanicglass.core.content.TreeState
 import kotlinx.collections.immutable.persistentListOf
@@ -21,6 +22,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
 
+data class MarkdownFile(
+    val contentFile: ContentFile?,
+    val markdown: State,
+)
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel(assistedFactory = FileViewModel.Factory::class)
 class FileViewModel @AssistedInject constructor(
@@ -32,11 +38,19 @@ class FileViewModel @AssistedInject constructor(
             Timber.e(it, "Failed to determine file from navigation arguments.")
             emit(null)
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
-    val markdownFlow = file
-        .flatMapLatest { parseMarkdownFlow(it?.content.orEmpty()) }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, State.Loading())
+        .flatMapLatest { contentFile ->
+            if (contentFile != null) {
+                Timber.d("Parsing file content of %s.", contentFile.name)
+            }
+            parseMarkdownFlow(contentFile?.content.orEmpty()).map { markdown ->
+                MarkdownFile(contentFile, markdown)
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = MarkdownFile(null, State.Loading())
+        )
 
     val recentFiles = contentRepository.recentFiles
         .map { it.drop(1).toImmutableList() }

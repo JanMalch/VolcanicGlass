@@ -49,11 +49,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavKey
 import com.mikepenz.markdown.m3.Markdown
-import com.mikepenz.markdown.model.State
+import com.skydoves.compose.stability.runtime.TraceRecomposition
 import io.github.janmalch.shed.Shed
 import io.github.janmalch.volcanicglass.R
 import io.github.janmalch.volcanicglass.core.UriKSerializer
-import io.github.janmalch.volcanicglass.core.content.ContentFile
 import io.github.janmalch.volcanicglass.core.content.TreeState
 import io.github.janmalch.volcanicglass.ui.components.FileTree
 import kotlinx.collections.immutable.ImmutableList
@@ -75,17 +74,16 @@ fun FileScreen(
     )
 ) {
     val file by viewModel.file.collectAsStateWithLifecycle()
-    val state by viewModel.markdownFlow.collectAsStateWithLifecycle()
     val tree by viewModel.tree.collectAsStateWithLifecycle()
     val recentFiles by viewModel.recentFiles.collectAsStateWithLifecycle()
-    FileScreen(file, state, tree, recentFiles, onFileClick)
+    FileScreen(file, tree, recentFiles, onFileClick)
 }
 
+@TraceRecomposition
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FileScreen(
-    file: ContentFile?,
-    state: State,
+    file: MarkdownFile,
     tree: TreeState,
     recentFiles: ImmutableList<TreeState.Success.Node>,
     onFileClick: (TreeState.Success.Node) -> Unit,
@@ -99,7 +97,7 @@ fun FileScreen(
             TopAppBar(
                 scrollBehavior = scrollBehavior,
                 title = {
-                    file?.also {
+                    file.contentFile?.also {
                         Text(
                             text = it.name,
                             maxLines = 1,
@@ -109,16 +107,16 @@ fun FileScreen(
                 },
                 actions = {
                     IconButton(
-                        enabled = file != null && tree is TreeState.Success,
+                        enabled = file.contentFile != null && tree is TreeState.Success,
                         onClick = {
-                            file ?: return@IconButton
+                            file.contentFile ?: return@IconButton
                             val success = tree as? TreeState.Success ?: return@IconButton
                             val intent = Intent(
                                 Intent.ACTION_VIEW, Uri.Builder()
                                     .scheme("obsidian")
                                     .path("open")
                                     .appendQueryParameter("vault", success.root.name)
-                                    .appendQueryParameter("file", file.name)
+                                    .appendQueryParameter("file", file.contentFile.name)
                                     .build()
                                     .toString()
                                     .replace(":/", "://")
@@ -182,7 +180,7 @@ fun FileScreen(
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             Markdown(
-                state = state,
+                state = file.markdown,
                 imageTransformer = Coil3ImageTransformer
             )
         }
