@@ -35,7 +35,9 @@ fun FileTree(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        FileTreeNode(tree.root, onFileClick, 0.dp)
+        for (node in tree.root.children) {
+            FileTreeNode(node, onFileClick, 0.dp)
+        }
     }
 }
 
