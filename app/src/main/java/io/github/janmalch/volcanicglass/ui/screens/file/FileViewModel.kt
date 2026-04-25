@@ -27,6 +27,8 @@ data class MarkdownFile(
     val markdown: State,
 )
 
+private val obsidianImageAttachmentPattern = Regex("!\\[\\[(.+?)]]")
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel(assistedFactory = FileViewModel.Factory::class)
 class FileViewModel @AssistedInject constructor(
@@ -42,9 +44,12 @@ class FileViewModel @AssistedInject constructor(
             if (contentFile != null) {
                 Timber.d("Parsing file content of '%s'.", contentFile.name)
             }
-            parseMarkdownFlow(contentFile?.content.orEmpty()).map { markdown ->
-                MarkdownFile(contentFile, markdown)
-            }
+            parseMarkdownFlow(
+                contentFile?.content.orEmpty()
+                    .replace(
+                        obsidianImageAttachmentPattern,
+                        { "![${it.groupValues.last()}](${it.groupValues.last()})" })
+            ).map { markdown -> MarkdownFile(contentFile, markdown) }
         }
         .stateIn(
             scope = viewModelScope,

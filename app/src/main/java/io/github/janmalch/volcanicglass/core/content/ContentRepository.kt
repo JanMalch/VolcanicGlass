@@ -46,12 +46,15 @@ sealed interface TreeState {
     @ConsistentCopyVisibility
     data class Success internal constructor(
         val root: Node,
-        private val lut: Map<Uri, Node> = emptyMap()
+        private val lut: Map<Uri, Node> = emptyMap(),
+        private val imageLut: Map<String, Uri> = emptyMap(),
     ) : TreeState {
 
-        private val nodeByFileName = lut.values.associateBy { it.name }
         operator fun get(uri: Uri): Node? = lut[uri]
-        operator fun get(fileName: String): Node? = nodeByFileName[fileName]
+        fun getImageUri(fileName: String): Uri? = imageLut[fileName]
+
+        override fun toString(): String =
+            "TreeState.Success(root=$root,lut.size=${lut.size},imageLut.size=${imageLut.size})"
 
         @Immutable
         data class Node(
@@ -77,19 +80,32 @@ sealed interface TreeState {
         }
 
         companion object {
-            private fun DocumentFile.toNode(lut: MutableMap<Uri, Node>): Node {
+            private fun DocumentFile.toNode(
+                lut: MutableMap<Uri, Node>,
+                imageLut: MutableMap<String, Uri>
+            ): Node {
                 if (isFile) {
                     return Node(this, emptyList()).also { lut[uri] = it }
                 }
-                return Node(
-                    this,
-                    listFiles().filter { (it.isDirectory && it.name != ".obsidian" && it.name != ".trash") || it.type == "text/markdown" }
-                        .map { it.toNode(lut) }).also { lut[uri] = it }
+                val children = mutableListOf<Node>()
+                for (file in listFiles()) {
+                    if (file.isDirectory && file.name != ".obsidian" && file.name != ".trash") {
+                        children += file.toNode(lut, imageLut)
+                    } else if (file.isFile) {
+                        if (file.type == "text/markdown") {
+                            children += file.toNode(lut, imageLut)
+                        } else if (file.name != null && file.type.orEmpty().startsWith("image/")) {
+                            imageLut[file.name.orEmpty()] = file.uri
+                        }
+                    }
+                }
+                return Node(this, children).also { lut[uri] = it }
             }
 
             fun valueOf(root: DocumentFile): Success {
                 val lut = mutableMapOf<Uri, Node>()
-                return Success(root.toNode(lut), lut)
+                val imageLut = mutableMapOf<String, Uri>()
+                return Success(root.toNode(lut, imageLut), lut, imageLut)
             }
         }
     }

@@ -181,7 +181,9 @@ fun FileScreen(
         ) {
             Markdown(
                 state = file.markdown,
-                imageTransformer = Coil3ImageTransformer
+                imageTransformer = remember(tree) {
+                    Coil3ImageTransformer(tree as? TreeState.Success)
+                }
             )
         }
 
