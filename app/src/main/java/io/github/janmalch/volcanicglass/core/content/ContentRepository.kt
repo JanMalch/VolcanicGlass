@@ -31,6 +31,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.measureTimedValue
 
 
 sealed interface TreeState {
@@ -104,12 +105,18 @@ class ContentRepository @Inject constructor(
         }
         .map { vaultUri ->
             vaultUri ?: return@map TreeState.NoVault
-            val vaultDocument = DocumentFile.fromTreeUri(context as Application, vaultUri)
+            val vaultDocument = measureTimedValue {
+                DocumentFile.fromTreeUri(context as Application, vaultUri)
+            }.also { Timber.d("Getting document file from vault took %s.", it.duration) }
+                .value
             if (vaultDocument == null) {
                 Timber.e("Failed to get document file for vault.")
                 return@map TreeState.Failure
             }
-            TreeState.Success.valueOf(vaultDocument)
+            measureTimedValue {
+                TreeState.Success.valueOf(vaultDocument)
+            }.also { Timber.d("Building document tree took %s.", it.duration) }
+                .value
         }
         .catch {
             Timber.e(it, "Failed to create document tree.")
