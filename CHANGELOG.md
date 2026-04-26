@@ -1,6 +1,17 @@
 <!-- ROAR:UPCOMING:START -->
-[Upcoming Changes …](https://github.com/JanMalch/VolcanicGlass/compare/v0.3.0...main)
+[Upcoming Changes …](https://github.com/JanMalch/VolcanicGlass/compare/v0.4.0...main)
 <!-- ROAR:UPCOMING:END -->
+
+## [0.4.0](https://github.com/JanMalch/VolcanicGlass/tree/v0.4.0) - April 26, 2026
+
+**Full Changelog:** [`v0.3.0...v0.4.0`](https://github.com/JanMalch/VolcanicGlass/compare/v0.3.0...v0.4.0)
+
+| type | description | commit |
+|---|---|---|
+| feat | update app icon and name | [`b18b2087`](https://github.com/JanMalch/VolcanicGlass/commit/b18b2087112ab6529d02eea082e91a4eab52eb53) |
+
+
+
 
 ## [0.3.0](https://github.com/JanMalch/VolcanicGlass/tree/v0.3.0) - April 25, 2026
 
