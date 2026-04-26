@@ -1,0 +1,9 @@
+# Volcanic Glass
+
+_Simple Markdown reader app for Android, built for startup speed._
+
+## Credit
+
+- App icon created
+  with [icon.kitchen](https://icon.kitchen/i/H4sIAAAAAAAAA0VQy27DIBD8lWp7aSWr8qN2al-rqtcecqt6wLAQJOK1ACetLP97F5IoB2AZZmeGXeEk3IIBhhW0eSdHHgZ4xE73WkMB4x1rVNfjG2PMc3YWPqamgHyAQi0WF_nRSpoYOJGTYiLYksT-b0bGjBfK4pRYo_m8XZJGpDknKJNP24heI5Oqq2vNrqwjJuNYpt6VfNHmQ2uUkdsgHISic1bd429cPLNWiLcSOJFkJ28lc-T1O96M4qlu2-Khri6rfGm6Z2YERAXDa9dWbTb6EkrZyWRNmmGodgV4aw4cPZUjxUjHS-1QZ3TjxiOpxaXBfnNy5cmqNB0KvJ9xhJ_tHyO_JAd7AQAA)
+- 
